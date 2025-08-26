@@ -30,6 +30,7 @@ import {
 import { UserService } from '../services/UserService';
 import { FareCalculator } from '../utils/FareCalculator';
 import { DateUtils } from '../utils/DateUtils';
+import { uploadToGoogleDrive } from '../utils/uploadToGoogleDrive';
 import { User } from '../models/User';
 import toast from 'react-hot-toast';
 
@@ -285,6 +286,11 @@ if (filterBusNumber !== 'all') {
   };
 
   const handleAddStudent = async (e: React.FormEvent) => {
+  console.log('Photo URL being saved for student:', formData.photo);
+  if (!formData.photo) {
+    toast.error('Photo upload failed or missing. Please upload a valid photo.');
+    return;
+  }
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       toast.error('Passwords do not match');
@@ -919,45 +925,13 @@ const getStats = () => {
     onChange={async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-
       try {
-        const DROPBOX_ACCESS_TOKEN = import.meta.env.VITE_DROPBOX_ACCESS_TOKEN||'sl.u.AF5p_RczoYLqdmaRltRH4QBtkI4ASAz2eJ_W0DiaeVAJNv5f-tvBKN_huq_CRf_W5p_ocBZsvykCCH66Z2eWPgILiscJbu09naVHnSAgIfi-yjTXU20uCPaFSx463nPDK5nblr7HZx8i9ZIZUJA3x8SnJTo7uUACJ-fi2IZL4Qv0_WFLjVeqDLMFcZM6ny2Xp02rTM3c2maHVexGFKxIS5BpW4xeZQyBzH-xCVW9ol8YX1ShRJRiqTjRTwJi9Wp_phF9Lsvx6U0qdU13gvXoVGfGCuZcrEHKvnNgw98tp0LLyHhoiqaNr8G7QLRsJReu7PF7sDMSSKy-IoVoMwh3hJp4ex2Npi-qVnEs7MAFFBmIw4fmadze8pTND3uRzAjMji2elemwEj61K1oA95De6TIzKXfDeOcocZseRW-FxJXf8AdAIS0-Xka82m7NNSoVXjfCtBc0Q0o7hm9jOwRL037uha78kxLRQwuiGrNnz_EWt1uIbnLalC_H8KquHXZsyX5Je_gA-UZpCt0EPRbaHbVy_ZLUwP4etDeOQMZQ_nYGr3oTLBFKIsFZdy5gr3hwjpmcLdH7hE2xg-8_giQgvW_QAzzpld3mYxups-7DMRrvYj0cbKK5gD9SEXKuRRjcub56ZI80wazfp-jMYkrTweeKeK5zdvkgE5l1BSfmuIkzLwN4SXoL0g9gzBzp7ywAkWUUj1oNmG24FljD9o9um9RwKLi8na5x-DaTQ1V-ZOVTuF8vibr4T78_Ln0JBidAYnL8Pvy3wRdxeY0TWnu7aEAOu6mgMDjdeYMNlJLxZJuls6xLljzuwBF1IXzatNpSaUYyfNtxT1rJ3Jz5E2hUwqcgH7gZA4JxCDzM31W0CqYOVvl8Pe9z7cA6SCyYJ10XUiy5D5l3zuIpZUoLj-lOgbDDuE8LPr9adNCdrlVv4hrUpNW0VBNkcW56NHnbrIXoEmwk7tl64NkM0d2IpVHE0cIyrsd-Pq1sVBCR-zRl1C34SkxtdZ1GTaFp-DdkNkZPjDkeUsKoXHlNyoCF5tyKEstoVnHKZlKOmDAwo3PrYQ5oTH6DTjASF5VZo_0yWWU9k_OuUopa5ZleI0UtHpYMDu9hw2EKOowvsMxBxH40UZSK86CNmkRV2goAVawbmTq_t91u7ZbIUiJl78MeMGJzFXlSrReFdzT52A3WgwMhYs9Fj5XlPD8uaQvh-mkkBS52pDATlKeAIt59YIpa5xXEqEAvddxw4hdtKc8iqS2ZhEjdaFetRymN6p5iMzA3oSa50FyG9f4BeOc8bDy2reD0e48a9it8ZyoEiEGFsF4pMLwK6xBRAC_Xus38YL71xtUnk8sdILwY9tx8DC9kGESgDJWV7DHtcVKGLxhBesW_HwoxVHQ-OZlaC7Zd88673ycwDsTRdqu_W6WTHd9A2i_mEx6q6EgbDAjy9V5SCI02J-LhDVB2ixYz4qpk9e4HjwItyZQ'; // from your .env file
-
-        // Upload to Dropbox
-        const uploadRes = await fetch("https://content.dropboxapi.com/2/files/upload", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${DROPBOX_ACCESS_TOKEN}`,
-            "Dropbox-API-Arg": JSON.stringify({
-              path: `/student_photos/${file.name}`,
-              mode: "add",
-              autorename: true,
-              mute: false
-            }),
-            "Content-Type": "application/octet-stream"
-          },
-          body: file
-        });
-
-        if (!uploadRes.ok) {
-          throw new Error("Dropbox upload failed");
-        }
-
-        // Get temporary public link
-        const uploadedFile = await uploadRes.json();
-        const linkRes = await fetch("https://api.dropboxapi.com/2/files/get_temporary_link", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${DROPBOX_ACCESS_TOKEN}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ path: uploadedFile.path_lower })
-        });
-
-        const linkData = await linkRes.json();
-        setFormData({ ...formData, photo: linkData.link }); // store public link in state
+        // Use Google Drive API via backend
+        const photoUrl = await uploadToGoogleDrive(file);
+        console.log('Photo URL returned from Google Drive:', photoUrl);
+        setFormData({ ...formData, photo: photoUrl }); // store public link in state
       } catch (error) {
-        console.error("Error uploading to Dropbox:", error);
+        console.error("Error uploading to Google Drive:", error);
       }
     }}
     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"

@@ -115,7 +115,7 @@ function StudentDashboard() {
         const pass: BusPass = {
           studentId: currentUser.id,
           studentName: currentUser.name,
-          busname: currentUser.busname,
+          // busname removed, not part of BusPass model
           validFrom: validFrom.toISOString().split('T')[0],
           validTo: validTo.toISOString().split('T')[0],
           month: paymentDate.getMonth() + 1,
@@ -174,7 +174,7 @@ function StudentDashboard() {
         const data = studentDoc.data();
         const user = {
           id: currentUser.id,
-          busname: currentUser.busname,
+          // busname removed, not part of BusPass model
           email: data.email || currentUser.email,
           name: data.name || '',
           department: data.department || '',
@@ -224,7 +224,7 @@ function StudentDashboard() {
       const pass: BusPass = {
         studentId: currentUser.id,
         studentName: currentUser.name,
-        busname: currentUser.busname,
+  // busname removed, not part of BusPass model
         validFrom: validFrom.toISOString().split('T')[0],
         validTo: validTo.toISOString().split('T')[0],
         month: paymentDate.getMonth() + 1,
@@ -266,23 +266,6 @@ function StudentDashboard() {
   };
 
   // Helper function to convert Google Drive URL to direct link
-  function convertGoogleDriveToDirectLink(url: string): string {
-    if (url.includes("drive.google.com")) {
-      // Handle different Google Drive URL formats
-      if (url.includes("/file/d/")) {
-        // Extract file ID from Google Drive sharing URL
-        const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-        if (fileIdMatch) {
-          const fileId = fileIdMatch[1];
-          return `https://drive.google.com/uc?id=${fileId}&export=download`;
-        }
-      } else if (url.includes("uc?id=")) {
-        // Already a direct link
-        return url;
-      }
-    }
-    return url;
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -680,11 +663,12 @@ function StudentDashboard() {
                             pdf.text(`Valid: ${busPass.month}/${busPass.year}`, margin + 10, textY);
 
                             // Convert Google Drive URL to direct link
-                            const photoUrl = convertGoogleDriveToDirectLink(currentUser.photo);
+                            const photoUrl = currentUser.photo;
                             const proxyUrl = `http://localhost:5000/api/image-proxy?url=${encodeURIComponent(photoUrl)}`;
                             console.log("Attempting to load photo from URL via proxy:", proxyUrl);
 
                             // PHOTO
+                            console.log('Student photo URL for PDF:', currentUser.photo);
                             const photoWidth = 45;
                             const photoHeight = 55;
                             const photoX = width - margin - photoWidth - 10;
