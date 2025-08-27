@@ -15,7 +15,7 @@ export async function uploadToGoogleDrive(file: File): Promise<string> {
   });
 
   // Send to backend server
-  const response = await fetch('http://localhost:5000/api/upload/google-drive', {
+  const response = await fetch('https://server.tceapps.in/api/upload/google-drive', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

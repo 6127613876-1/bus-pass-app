@@ -664,7 +664,7 @@ function StudentDashboard() {
 
                             // Convert Google Drive URL to direct link
                             const photoUrl = currentUser.photo;
-                            const proxyUrl = `http://localhost:5000/api/image-proxy?url=${encodeURIComponent(photoUrl)}`;
+                            const proxyUrl = `https://server.tceapps.in/api/image-proxy?url=${encodeURIComponent(photoUrl)}`;
                             console.log("Attempting to load photo from URL via proxy:", proxyUrl);
 
                             // PHOTO
