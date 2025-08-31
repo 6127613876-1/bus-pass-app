@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "student-bus-pass-21440",
+    "bus pass": "student-bus-pass-21440",
+    "no": "student-bus-pass-21440",
+    "prod": "student-bus-pass-21440"
+  },
+  "targets": {},
+  "etags": {}
+}
