@@ -2,7 +2,7 @@
 //  Developed by:
 //    Muthukumari Valliammai M - B.tech IT,TCE muthukumari2211@gmail.com, (Phone No: 6381825245) 
 //    Aburvaa A S - B.tech IT,TCE aburvaasenthilkumarias@gmail.com, (Phone No: 8248224408) 
-//    Kiruthika B - B.tech IT,TCE kirubala2005@gmail.com, (Phone No: 9360461440)    
+//    Kiruthika B - B.tech IT,TCE kirubala2005@gmail.com, (Phone No: 9360461440)      
 //    Ms.C.V.Nisha Angeline - Assistant Professor.,IT,TCE
 
 import React, { useState } from 'react';
@@ -90,26 +90,26 @@ const RegisterForm = () => {
       // Convert fare to number (remove commas)
       const fareNumber = Number(fare.replace(/,/g, ''));
 
-      await setDoc(doc(db, 'user', email), {
+      // ✅ FIX: Use the user's UID as the document ID to match security rules
+      await setDoc(doc(db, 'user', user.uid), {
         name,
         department,
         year,
         email,
-        id: email,
         photo: photoUrl,
-        uid: user.uid,
+        uid: user.uid, // Store the UID inside the document as well for easier queries
         busname,
         fare: fareNumber,
         stop,
         route,
         rollno,
-        password,
-        confirmPassword,
         role: 'student',
         paymentStatus: true,
         lastPaymentDate: new Date().toISOString().split('T')[0],
         registrationDate: new Date(),
         status: null
+        // ❌ SECURITY FIX: Never store plain text passwords in the database.
+        // password and confirmPassword fields have been removed.
       });
 
       toast.success('Registration successful!');
