@@ -306,7 +306,7 @@ const validTo   = new Date(startYear + 1, 5, 30); // June 30th
                 onClick={() => setShowChangePass(true)}
                 className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors w-full sm:w-auto"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0-1.104.896-2 2-2s2 .896 2 2m-4 0a2 2 0 114 0m-4 0v2a2 2 0 002 2h0a2 2 0 002-2v-2" /></svg>
+                <svg xmlns="https://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0-1.104.896-2 2-2s2 .896 2 2m-4 0a2 2 0 114 0m-4 0v2a2 2 0 002 2h0a2 2 0 002-2v-2" /></svg>
                 <span>Change Password</span>
               </button>
               <button
