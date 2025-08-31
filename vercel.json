@@ -1,11 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "http://:host/:path*",
-      "destination": "https://:host/:path*",
-      "statusCode": 308
-    }
-  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
