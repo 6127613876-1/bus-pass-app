@@ -746,7 +746,7 @@ textY += 12;
 
     // ===== QR Code =====
     // Build the verification URL
-const qrValue = `https://student-bus-pass-21440.web.app/verify?email=${encodeURIComponent(currentUser.email)}`;
+const qrValue = `https://bus-pass-app-ebon.vercel.app/verify?email=${encodeURIComponent(currentUser.email)}`;
 
 
 // Create a temporary canvas
